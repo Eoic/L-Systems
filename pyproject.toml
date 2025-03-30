@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lsys"
+version = "0.0.1"
+authors = [
+  { name="Karolis Strazdas", email="karolis.strazdas@protonmail.com" },
+]
+description = "L-systems interpreter."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/Eoic/L-Systems"
+Issues = "https://github.com/Eoic/L-Systems/issues"
+
+[project.scripts]
+lsys = "lsys.lsys:main"
+
+[tool.ruff]
+line-length = 120
+select = ["E", "W", "F", "I", "UP", "B", "C90", "C4", "SIM", "PL", "RUF", "PERF", "S"]
+ignore = [
+    "B905",
+]
+fixable = ["ALL"]

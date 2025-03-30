@@ -1,6 +1,7 @@
-from typing import Callable, List
-from shapes import Shape, koch_curve, sierpinski, sierpinski_approx, plant
 from turtle import Turtle, mode, window_height
+from typing import Callable, List
+
+from lsys.templates import Shape, plant
 
 
 class Interpreter:
@@ -16,64 +17,62 @@ class Interpreter:
         self.__draw(turtle, shape, alphabet, current_string)
         turtle.screen.mainloop()
 
-    def __create_alphabet(
-        self, shape: Shape
-    ) -> dict[str, Callable[[Turtle, Shape, List], None]]:
+    def __create_alphabet(self, shape: Shape) -> dict[str, Callable[[Turtle, Shape, List], None]]:
         alphabet = {}
 
         for variable, action in shape.actions.items():
             match action:
-                case 'DRAW_FORWARD':
+                case "DRAW_FORWARD":
                     alphabet[variable] = self.__draw_forward
-                case 'MOVE_FORWARD':
+                case "MOVE_FORWARD":
                     alphabet[variable] = self.__move_forward
-                case 'TURN_LEFT':
+                case "TURN_LEFT":
                     alphabet[variable] = self.__turn_left
-                case 'TURN_RIGHT':
+                case "TURN_RIGHT":
                     alphabet[variable] = self.__turn_right
-                case 'START_BRANCH':
+                case "START_BRANCH":
                     alphabet[variable] = self.__start_branch
-                case 'END_BRANCH':
+                case "END_BRANCH":
                     alphabet[variable] = self.__end_branch
-                case 'NOTHING':
-                    alphabet[variable] = lambda *args: None
+                case "NOTHING":
+                    alphabet[variable] = lambda *_: None
                 case _:
                     print(f'Unrecognized action "{action}" for variable "{variable}"!')
                     continue
 
         return alphabet
 
-    def __start_branch(self, turtle, shape, stack):
+    def __start_branch(self, turtle, _, stack):
         stack.append((turtle.position(), turtle.heading()))
 
-    def __end_branch(self, turtle, shape, stack):
+    def __end_branch(self, turtle, _, stack):
         [position, heading] = stack.pop()
         turtle.penup()
         turtle.goto(position)
         turtle.setheading(heading)
         turtle.pendown()
 
-    def __turn_left(self, turtle, shape, stack):
+    def __turn_left(self, turtle, shape, _):
         turtle.left(shape.angle)
 
-    def __turn_right(self, turtle, shape, stack):
+    def __turn_right(self, turtle, shape, _):
         turtle.right(shape.angle)
 
-    def __draw_forward(self, turtle, shape, stack):
+    def __draw_forward(self, turtle, shape, _):
         turtle.forward(shape.step_length)
-        
-    def __move_forward(self, turtle, shape, stack):
+
+    def __move_forward(self, turtle, shape, _):
         turtle.penup()
         turtle.forward(shape.step_length)
         turtle.pendown()
 
     def __build_string(self, shape: Shape, prev_string: str):
-        return ''.join([shape.rules.get(token, token) for token in prev_string])
+        return "".join([shape.rules.get(token, token) for token in prev_string])
 
     def __setup_turtle(self, turtle: Turtle):
-        mode('logo')
+        mode("logo")
 
-        turtle.color('green')
+        turtle.color("green")
         turtle.pensize(3)
         turtle.penup()
         turtle.setpos((0, -window_height() / 2))
@@ -95,17 +94,16 @@ class Interpreter:
             if executor is not None:
                 executor(turtle, shape, stack)
 
-
 def main():
     interpreter = Interpreter()
 
     try:
         interpreter.render(plant)
     except KeyboardInterrupt:
-        print('Bye.')
+        print("Bye.")
     except Exception as error:
         print(error)
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
+
