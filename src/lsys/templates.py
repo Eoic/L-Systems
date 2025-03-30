@@ -113,7 +113,7 @@ plant_sth = Shape(
     rules={
         "F": [
             ("F[+F[+F]F][-F[-F]F]F[+F][-F]", 0.5),
-            ("FF-[-F+F+F]+[+F-F-F]", 0.5)
+            ("FF-[-F+F+F]+[+F-F-F]", 0.5),
         ]
     },
     angle=lambda: secrets.randbelow(26) + 20,

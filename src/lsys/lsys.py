@@ -2,9 +2,9 @@ import random
 from turtle import Turtle, mode, window_height
 from typing import Callable, List
 
-from lsys.methods.stochastic import Stack
-from lsys.templates import LSystemType, Shape, plant_sth
+from lsys.templates import LSystemType, Shape, plant
 
+Stack = list[tuple[tuple[int, int], int]]
 
 class Interpreter:
     def render(self, shape: Shape):
@@ -109,7 +109,7 @@ def main():
     interpreter = Interpreter()
 
     try:
-        interpreter.render(plant_sth)
+        interpreter.render(plant)
     except KeyboardInterrupt:
         print("Bye.")
     except Exception as error:
