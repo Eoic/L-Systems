@@ -1,7 +1,9 @@
+import random
 from turtle import Turtle, mode, window_height
 from typing import Callable, List
 
-from lsys.templates import Shape, plant
+from lsys.methods.stochastic import Stack
+from lsys.templates import LSystemType, Shape, plant_sth
 
 
 class Interpreter:
@@ -42,32 +44,41 @@ class Interpreter:
 
         return alphabet
 
-    def __start_branch(self, turtle, _, stack):
+    def __start_branch(self, turtle: Turtle, _, stack: Stack):
         stack.append((turtle.position(), turtle.heading()))
 
-    def __end_branch(self, turtle, _, stack):
+    def __end_branch(self, turtle: Turtle, _, stack: Stack):
         [position, heading] = stack.pop()
         turtle.penup()
         turtle.goto(position)
         turtle.setheading(heading)
         turtle.pendown()
 
-    def __turn_left(self, turtle, shape, _):
-        turtle.left(shape.angle)
+    def __turn_left(self, turtle: Turtle, shape: Shape, _):
+        turtle.left(shape.angle())
 
-    def __turn_right(self, turtle, shape, _):
-        turtle.right(shape.angle)
+    def __turn_right(self, turtle: Turtle, shape: Shape, _):
+        turtle.right(shape.angle())
 
-    def __draw_forward(self, turtle, shape, _):
+    def __draw_forward(self, turtle: Turtle, shape: Shape, _):
         turtle.forward(shape.step_length)
 
-    def __move_forward(self, turtle, shape, _):
+    def __move_forward(self, turtle: Turtle, shape: Shape, _):
         turtle.penup()
         turtle.forward(shape.step_length)
         turtle.pendown()
 
+    def __choose_replacement(self, rules: list[tuple[str, int]]):
+        return random.choices([r[0] for r in rules], [r[1] for r in rules])[0]
+
     def __build_string(self, shape: Shape, prev_string: str):
-        return "".join([shape.rules.get(token, token) for token in prev_string])
+        match shape.type:
+            case LSystemType.DETERMINISTIC:
+                return "".join([shape.rules.get(token, token) for token in prev_string])
+            case LSystemType.STOCHASTIC:
+                return "".join([self.__choose_replacement(shape.rules.get(token, [(token, 1.0)])) for token in prev_string])
+            case _:
+                raise ValueError(f"Unsupported type: {shape.type}.")
 
     def __setup_turtle(self, turtle: Turtle):
         mode("logo")
@@ -98,7 +109,7 @@ def main():
     interpreter = Interpreter()
 
     try:
-        interpreter.render(plant)
+        interpreter.render(plant_sth)
     except KeyboardInterrupt:
         print("Bye.")
     except Exception as error:

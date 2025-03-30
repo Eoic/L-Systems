@@ -1,5 +1,6 @@
+import secrets
 from enum import Enum, auto
-from typing import NamedTuple
+from typing import Callable, NamedTuple
 
 
 class LSystemType(Enum):
@@ -12,7 +13,7 @@ class LSystemType(Enum):
 class Shape(NamedTuple):
     axiom: str
     rules: dict[str, str]
-    angle: int
+    angle: Callable[[], int]
     iterations: int
     step_length: int
     actions: dict[str, str]
@@ -22,7 +23,7 @@ class Shape(NamedTuple):
 koch_curve = Shape(
     axiom="F",
     rules={"F": "F+F-F-F+F"},
-    angle=90,
+    angle=lambda: 90,
     iterations=3,
     step_length=20,
     actions={
@@ -39,7 +40,7 @@ sierpinski = Shape(
         "F": "F-G+F+G-F",
         "G": "GG",
     },
-    angle=120,
+    angle=lambda: 120,
     iterations=6,
     step_length=10,
     actions={
@@ -57,7 +58,7 @@ sierpinski_approx = Shape(
         "A": "B-A-B",
         "B": "A+B+A",
     },
-    angle=60,
+    angle=lambda: 60,
     iterations=6,
     step_length=10,
     actions={
@@ -75,7 +76,7 @@ dragon = Shape(
         "F": "F+G",
         "G": "F-G",
     },
-    angle=90,
+    angle=lambda: 90,
     iterations=10,
     step_length=10,
     actions={
@@ -93,7 +94,7 @@ plant = Shape(
         "F": "FF",
         "X": "F+[[X]-X]-F[-FX]+X",
     },
-    angle=25,
+    angle=lambda: 25,
     iterations=6,
     step_length=15,
     actions={
@@ -105,5 +106,27 @@ plant = Shape(
         "-": "TURN_RIGHT",
     },
     type=LSystemType.DETERMINISTIC
+)
+
+plant_sth = Shape(
+    axiom="F",
+    rules={
+        "F": [
+            ("F[+F[+F]F][-F[-F]F]F[+F][-F]", 0.5),
+            ("FF-[-F+F+F]+[+F-F-F]", 0.5)
+        ]
+    },
+    angle=lambda: secrets.randbelow(26) + 20,
+    iterations=5,
+    step_length=25,
+    actions={
+        "F": "DRAW_FORWARD",
+        "[": "START_BRANCH",
+        "]": "END_BRANCH",
+        "X": "NOTHING",
+        "+": "TURN_LEFT",
+        "-": "TURN_RIGHT",
+    },
+    type=LSystemType.STOCHASTIC
 )
 
