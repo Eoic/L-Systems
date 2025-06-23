@@ -6,7 +6,7 @@
 # L-systems interpreter
 
 ## Features
-* Grammar variations:
+** Grammar variations**
     1. Stochastic
     2. Context sensitive
     3. Parametric
