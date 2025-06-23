@@ -3,7 +3,7 @@
 [black]: https://roadmap.sh/projects/task-tracker
 [black-shield]: https://img.shields.io/badge/Roadmap.sh-task%20tracker-black.svg?style=for-the-badge&labelColor=gray
 
-# L-systems interpreter.
+# L-systems interpreter
 
 ## Features
 * Grammar variations:
