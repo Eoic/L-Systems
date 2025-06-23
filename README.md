@@ -6,7 +6,7 @@
 # L-systems interpreter
 
 ## Features
-** Implemented grammars**
+**Implemented grammars**
 
 1. Stochastic
 2. Context sensitive
