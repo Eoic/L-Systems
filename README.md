@@ -6,10 +6,11 @@
 # L-systems interpreter
 
 ## Features
-** Grammar variations**
-    1. Stochastic
-    2. Context sensitive
-    3. Parametric
+** Implemented grammars**
+
+1. Stochastic
+2. Context sensitive
+3. Parametric
 
 ## Development
 1. `py -m pip install --upgrade build`
